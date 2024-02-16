@@ -3,7 +3,7 @@ from streamlit_extras.stoggle import stoggle
 
 st.text_input(
     "Enter a query for the paper you want to search for (e.g., LayoutLMv3)",
-    key="query",
+    key="buddy_query",
 )
 
 st.sidebar.number_input(
@@ -14,7 +14,7 @@ st.sidebar.number_input(
     max_value=10,
 )
 
-st.write(st.session_state.query)
+st.write(st.session_state.buddy_query)
 for result in range(st.session_state.num_results):
     stoggle(f"Paper {result + 1}", f"paper_{result + 1}")
 # st.chat_input("Say something")
