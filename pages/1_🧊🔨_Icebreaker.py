@@ -1,6 +1,11 @@
+"""
+This is the Icebreaker page of the Streamlit app.
+"""
+
 import streamlit as st
 from streamlit_extras.stoggle import stoggle
 
+from langchain.prompts import load_prompt
 from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 
@@ -10,13 +15,13 @@ from src.search import (
     # streamify_abstract,
     streamify_llm_response,
 )
-from src.langchain import icebreaker_prompt_template
+
 from src.debug import RESULTS
 
-DEBUG = True
+DEBUG = False
 
-if "selected_abstract" not in st.session_state:
-    st.session_state["selected_abstract"] = None
+if "icebreaker_selected_abstract" not in st.session_state:
+    st.session_state["icebreaker_selected_abstract"] = None
 
 if "icebreaker_abstract" not in st.session_state:
     st.session_state["icebreaker_abstract"] = None
@@ -25,7 +30,7 @@ if "icebreaker_abstract" not in st.session_state:
 st.sidebar.title("Search Settings")
 st.sidebar.number_input(
     "Enter a number of results to display",
-    key="icebreaker_num_results",
+    key="num_search_results",
     value=3,
     min_value=1,
     max_value=5,
@@ -54,7 +59,7 @@ st.text_input(
 )
 
 
-search_func = top_n_results_factory(st.session_state.icebreaker_num_results)
+search_func = top_n_results_factory(st.session_state.num_search_results)
 
 search_tool = Tool(
     name="Google Search",
@@ -82,29 +87,30 @@ if len(st.session_state.icebreaker_query) != 0:
             )
 
 
-for i in range(st.session_state.icebreaker_num_results):
+for i in range(st.session_state.num_search_results):
     if st.session_state.get(f"icebreaker_select_abstract_{i}"):
-        st.session_state["selected_abstract"] = get_paper_details(results[i])[
-            "abstract"
-        ]
+        st.session_state["icebreaker_selected_abstract"] = get_paper_details(
+            results[i]
+        )["abstract"]
 
 st.markdown("### Icebreaking")
 
 st.session_state["icebreaker_abstract"] = st.text_area(
-    "Abstract to summarize:",
-    value=st.session_state["selected_abstract"],
+    "Abstract to explain:",
+    value=st.session_state["icebreaker_selected_abstract"],
     height=200,
 )
 
-# print(icebreaker_abstract)
+explain_button = st.button("Explain", key="icebreaker_explain")
 
-summarize_button = st.button("Summarize", key="icebreaker_summarize")
-
+# TODO: Add different models
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", streaming=True)
 
-if summarize_button:
+icebreaker_prompt_template = load_prompt("prompts/icebreaker.yaml")
+
+if explain_button:
     placeholder = st.empty()
-    write_summarizing = placeholder.write("Summarizing...")
+    write_summarizing = placeholder.write("Explaining...")
     icebreaker_prompt = icebreaker_prompt_template.format(
         audience=st.session_state.icebreaker_audience,
         language=st.session_state.icebreaker_language,
