@@ -3,7 +3,6 @@ This module contains functionality around searching for papers.
 """
 
 from typing import Dict
-import time
 
 import streamlit as st
 
@@ -70,33 +69,3 @@ def get_paper_details(search_result: Dict[str, str]) -> Dict[str, str]:
     authors = ", ".join(authors)
     authors
     return {"title": title, "authors": authors, "abstract": abstract}
-
-
-def streamify_abstract(abstract: str):
-    """
-    Streamify an abstract.
-
-    Args:
-    - abstract: str: The abstract
-
-    Returns:
-    - str: The streamified abstract
-    """
-    for char in abstract:
-        yield char
-        time.sleep(0.01)
-
-
-def streamify_llm_response(llm, prompt):
-    """
-    Streamify an LLM response.
-
-    Args:
-    - llm_response: str: The LLM response
-
-    Returns:
-    - str: The streamified LLM response
-    """
-
-    for chunk in llm.stream(prompt):
-        yield chunk.content

@@ -2,74 +2,35 @@
 # Paper Buddy 🧻🤸
 """
 
-import base64
-import requests
-
 import streamlit as st
 from streamlit_extras.stoggle import stoggle
 from streamlit_javascript import st_javascript
 
 from langchain.tools import Tool
-from langchain_openai import ChatOpenAI
+
+# from langchain_openai import ChatOpenAI
 
 from src.search import (
     top_n_results_factory,
     get_paper_details,
-    streamify_abstract,
 )
 from src.debug import RESULTS
-
-
-@st.cache_data
-def download_pdf_bytes(url):
-    """
-    Downloads a PDF file from the given URL and returns its content as bytes.
-
-    Args:
-      url: The URL of the PDF file.
-
-    Returns:
-      The content of the PDF file as base64 encoded byte string, or None if the download fails.
-
-    Raises:
-      requests.exceptions.RequestException: If there is an error downloading the file.
-    """
-    response = requests.get(url, stream=True)
-    response.raise_for_status()  # Raise an exception for non-200 status codes
-
-    if response.headers.get("Content-Type") != "application/pdf":
-        raise ValueError("URL doesn't point to a PDF file")
-
-    content_length = (
-        int(response.headers.get("Content-Length"))
-        if response.headers.get("Content-Length")
-        else None
-    )
-    chunks = []
-    total_downloaded = 0
-    for chunk in response.iter_content(1024):
-        chunks.append(chunk)
-        total_downloaded += len(chunk)
-        if content_length:
-            print(
-                f"Downloaded {total_downloaded}/{content_length} bytes ({total_downloaded / content_length * 100:.2f}%)"
-            )
-
-    return base64.b64encode(b"".join(chunks)).decode("utf-8")
-
-
-def display_pdf(base64_pdf, ui_width):
-
-    # Embed PDF in HTML
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width=100% height={str(ui_width * 8/9)} type="application/pdf"></iframe>'
-
-    # Display file
-    st.markdown(pdf_display, unsafe_allow_html=True)
+from src.process import process_arxiv_paper_from_url
+from src.qa_chain import get_qa_chain
+from src.display import display_pdf, streamify_qa_response
 
 
 DEBUG = False
+
 if "paper_pdf" not in st.session_state:
     st.session_state["paper_pdf"] = None
+
+if "paper_tex" not in st.session_state:
+    st.session_state["paper_tex"] = None
+
+if "paper_details" not in st.session_state:
+    st.session_state["paper_details"] = None
+
 
 # Sidebar
 st.sidebar.title("Search Settings")
@@ -121,12 +82,15 @@ col1, col2 = st.columns(spec=[2, 1], gap="small")
 
 for i in range(st.session_state.num_search_results):
     if st.session_state.get(f"pb_select_abstract_{i}"):
-        st.session_state.paper_pdf = download_pdf_bytes(
-            results[i]["link"].replace("abs", "pdf")
+        st.session_state.paper_details = get_paper_details(results[i])
+        st.session_state.paper_tex, st.session_state.paper_pdf = (
+            process_arxiv_paper_from_url(results[i]["link"])
         )
 
 # Chat and PDF display
-if st.session_state.paper_pdf:
+if st.session_state.paper_pdf and st.session_state.paper_tex:
+
+    qa_chain = get_qa_chain(st.session_state.paper_details, st.session_state.paper_tex)
     # add checkbox to show/hide the chat history
     st.sidebar.checkbox("Show chat history", key="show_chat_history", value=False)
 
@@ -157,8 +121,7 @@ if st.session_state.paper_pdf:
 
                 # Display assistant response in chat message container
                 with st.chat_message("ai"):
-                    response = f"Echo: {prompt}"
-                    st.write_stream(streamify_abstract(response))
+                    response = st.write_stream(streamify_qa_response(qa_chain, prompt))
                 # Add assistant response to chat history
                 st.session_state.messages.append(
                     {"role": "assistant", "content": response}
