@@ -99,7 +99,8 @@ def _get_llm(model: str):
     return ChatOpenAI(model=model)
 
 
-def _get_prompt_template(prompt_name: str):
+# TODO: move to a separate file
+def get_prompt_template(prompt_name: str):
     """
     Get a prompt template.
 
@@ -125,7 +126,7 @@ def get_qa_chain(
 
     """
 
-    prompt_template = _get_prompt_template(prompt_name)
+    prompt_template = get_prompt_template(prompt_name)
     retriever = _get_paper_retriever(paper_details, tex_content, embedding_model)
     llm = _get_llm(llm)
 

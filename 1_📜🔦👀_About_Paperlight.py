@@ -19,7 +19,7 @@ st.markdown(
     following audiences:
         - High School Students
         - College Students
-        - Parents
+        - University Students
         As of now, only papers from the [arXiv](https://arxiv.org/) and
         [astrophysics data system](https://ui.adsabs.harvard.edu/) are supported.
     - **Paper Buddy**: Tool to help you understand the paper. It allows you to ask questions about the paper and get the answers.
