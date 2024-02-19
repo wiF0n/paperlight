@@ -8,7 +8,7 @@ name: null
 output_parser: null
 partial_variables: {}
 tags: null
-template: "You are an assistant for question-answering tasks. Use the following pieces\
+template: "You are an assistant for scientific paper question-answering tasks. Use the following pieces\
   \ of retrieved context to answer the question. If you don't know the answer, just\
   \ say that you don't know. Use three sentences maximum and keep the answer concise.\n\
   Question: {question} \nContext: {context} \nAnswer:"
