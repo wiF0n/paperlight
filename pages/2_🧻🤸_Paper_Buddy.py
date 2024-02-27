@@ -2,6 +2,8 @@
 # Paper Buddy 🧻🤸
 """
 
+from dotenv import load_dotenv
+
 import streamlit as st
 from streamlit_extras.stoggle import stoggle
 from streamlit_javascript import st_javascript
@@ -10,16 +12,13 @@ from langchain.tools import Tool
 
 # from langchain_openai import ChatOpenAI
 
-from src.search import (
-    top_n_results_factory,
-    get_paper_details,
-)
+from src.search import get_paper_details, get_search_results
 from src.debug import RESULTS
 from src.process import process_arxiv_paper_from_url
 from src.qa_chain import get_qa_chain
 from src.display import display_pdf, streamify_qa_response
 
-
+load_dotenv()
 DEBUG = False
 
 if "paper_pdf" not in st.session_state:
@@ -53,19 +52,11 @@ st.text_input(
     key="ib_query",
 )
 
-search_func = top_n_results_factory(st.session_state.num_search_results)
-
-search_tool = Tool(
-    name="Google Search",
-    description="Search Google for recent results.",
-    func=search_func,
-)
-
 if len(st.session_state.ib_query) != 0:
     if DEBUG:
         results = RESULTS
     else:
-        results = search_tool.run(st.session_state.ib_query + "+arxiv")
+        results = get_search_results(st.session_state.ib_query + "+arxiv", st.session_state.num_search_results)
 
     if (
         len(results) == 1

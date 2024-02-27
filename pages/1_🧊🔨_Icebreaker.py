@@ -1,6 +1,7 @@
 """
 This is the Icebreaker page of the Streamlit app.
 """
+from dotenv import load_dotenv
 
 import streamlit as st
 from streamlit_extras.stoggle import stoggle
@@ -14,6 +15,8 @@ from src.search import (
 from src.qa_chain import get_prompt_template
 from src.display import streamify_llm_response
 from src.debug import RESULTS
+
+load_dotenv()
 
 DEBUG = True
 
