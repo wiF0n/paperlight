@@ -1,5 +1,5 @@
 """
-# Paper Buddy 🧻🤸
+Paper Buddy 🧻🤸
 """
 
 from dotenv import load_dotenv
@@ -8,10 +8,6 @@ import streamlit as st
 from streamlit_extras.stoggle import stoggle
 from streamlit_javascript import st_javascript
 
-from langchain.tools import Tool
-
-# from langchain_openai import ChatOpenAI
-
 from src.search import get_paper_details, get_search_results
 from src.debug import RESULTS
 from src.process import process_arxiv_paper_from_url
@@ -19,7 +15,6 @@ from src.qa_chain import get_qa_chain
 from src.display import display_pdf, streamify_qa_response
 
 load_dotenv()
-DEBUG = False
 
 if "paper_pdf" not in st.session_state:
     st.session_state["paper_pdf"] = None
@@ -53,7 +48,7 @@ st.text_input(
 )
 
 if len(st.session_state.ib_query) != 0:
-    if DEBUG:
+    if st.session_state.debug:
         results = RESULTS
     else:
         results = get_search_results(st.session_state.ib_query + "+arxiv", st.session_state.num_search_results)

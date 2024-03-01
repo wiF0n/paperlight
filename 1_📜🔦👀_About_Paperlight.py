@@ -1,5 +1,15 @@
+import argparse
+
 import streamlit as st
 
+# Define arguments
+parser = argparse.ArgumentParser(prog="Paperlight", description="Look at scientific papers with more clarity")
+
+parser.add_argument("--debug", action="store_true", help="Enable debug mode")
+
+args = parser.parse_args()
+
+st.session_state["debug"] = args.debug
 
 st.set_page_config(
     initial_sidebar_state="expanded",

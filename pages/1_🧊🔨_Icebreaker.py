@@ -18,8 +18,6 @@ from src.debug import RESULTS
 
 load_dotenv()
 
-DEBUG = True
-
 if "icebreaker_selected_abstract" not in st.session_state:
     st.session_state["icebreaker_selected_abstract"] = None
 
@@ -65,7 +63,7 @@ st.text_input(
 )
 
 if len(st.session_state.icebreaker_query) != 0:
-    if DEBUG:
+    if st.session_state.debug:
         results = RESULTS
     else:
         results = get_search_results(
@@ -102,8 +100,7 @@ st.session_state["icebreaker_abstract"] = st.text_area(
 
 explain_button = st.button("Explain", key="icebreaker_explain")
 
-# TODO: Add choice of model
-if DEBUG:
+if st.session_state.debug:
     st.sidebar.selectbox(
         "Select the model to use:",
         ["gpt-3.5-turbo", "gpt-4-turbo-preview"],
