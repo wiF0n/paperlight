@@ -25,10 +25,10 @@ if "icebreaker_abstract" not in st.session_state:
     st.session_state["icebreaker_abstract"] = None
 
 if "icebreaker_model" not in st.session_state:
-    st.session_state["icebreaker_model"] = "gpt-3.5-turbo"
+    st.session_state["icebreaker_model"] = "gpt-4-turbo-preview"
 
 if "icebreaker_prompt" not in st.session_state:
-    st.session_state["icebreaker_prompt"] = "icebreaker"
+    st.session_state["icebreaker_prompt"] = "icebreaker_good"
 
 # Sidebar
 st.sidebar.title("Search Settings")
@@ -103,13 +103,13 @@ explain_button = st.button("Explain", key="icebreaker_explain")
 if st.session_state.debug:
     st.sidebar.selectbox(
         "Select the model to use:",
-        ["gpt-3.5-turbo", "gpt-4-turbo-preview"],
+        ["gpt-4-turbo-preview", "gpt-3.5-turbo"],
         key="icebreaker_model",
     )
 
     st.sidebar.selectbox(
         "Select prompt to use:",
-        ["icebreaker", "icebreaker_bad"],
+        ["icebreaker_good", "icebreaker_ok", "icebreaker_bad"],
         key="icebreaker_prompt",
     )
 
