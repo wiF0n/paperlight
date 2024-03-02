@@ -9,7 +9,6 @@ from streamlit_extras.stoggle import stoggle
 from streamlit_javascript import st_javascript
 
 from src.search import get_paper_details, get_search_results
-from src.debug import RESULTS
 from src.process import process_arxiv_paper_from_url
 from src.qa_chain import get_qa_chain
 from src.display import display_pdf, streamify_qa_response
@@ -48,10 +47,7 @@ st.text_input(
 )
 
 if len(st.session_state.ib_query) != 0:
-    if st.session_state.debug:
-        results = RESULTS
-    else:
-        results = get_search_results(st.session_state.ib_query + "+arxiv", st.session_state.num_search_results)
+    results = get_search_results(st.session_state.ib_query + "+arxiv", st.session_state.num_search_results)
 
     if (
         len(results) == 1
