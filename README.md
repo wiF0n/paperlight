@@ -26,12 +26,16 @@ The project started as a demonstration app for the workshop [End-to-End AI App E
 
 This project is currently in the early stages of development. The core functionality is tested on a small number of papers, and the user interface still needs to be improved. So you can expect to see some bugs, inconsistencies, and inaccuracies both in code and results.
 
-Additionaly, only arxiv and astrophysics data system are currently supported as paper sources.
+Additionally, only arXiv and astrophysics data system are currently supported as paper sources.
 
 ## Possible enhancements
 
 - **More paper sources**: Add support for more paper sources (e.g. PubMed)
 - **Chat history**: Add a chat history to the internal prompt of the Paper Buddy tool. This would allow LLM to not only take into account the current question and the paper content, but also the previous questions and answers. 
+- **Better UI**: Improve the user interface and user experience of the app.
+- **Open-source Model**: Use an open-source model for the LLM and Embedding models. Could be quantized, to save resources.
+- **Downloadable summaries**: Allow users to download the summaries.
+- **Choice of prompt**: Allow users to choose the prompt for the LLM model.
 
  
 ## How to run the app
