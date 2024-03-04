@@ -1,4 +1,4 @@
-# PaperLight 📜🔦👀: Let's Shine a Light on Science
+# PaperLight 📜🔦👀: Look at scientific papers with more clarity
 
 # About
 
@@ -12,8 +12,14 @@ The project started as a demonstration app for the workshop [End-to-End AI App E
 - You can find papers of your interest based on your search criteria.
 
 - **Icebreaker**:  Summarize the papers (based on their abstract) in a way that makes it easy to understand what they are about. You can choose the audience level of the summary (e.g. high-school, college, university students), and also a language of the summary (e.g. English, Slovak).
+Below you can see a process diagram of the Icebreaker tool:
+
+![Icebreaker](diagrams/icebreaker.png)
 
 - **Paper Buddy**: A tool that allows you to view the papers and ask questions about them. The questions are answered by the AI agents, and the answers are based on the content of the papers. 
+Below you can see a process diagram of the Paper Buddy tool:
+
+![Paper Buddy](diagrams/paper_buddy.png)
 
 ## Main tools and technologies
 
